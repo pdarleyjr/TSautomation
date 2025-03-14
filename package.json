@@ -1,0 +1,35 @@
+{
+  "name": "tsautomation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "start:headless": "HEADLESS=true node dist/index.js",
+    "start:debug": "DEBUG=pw:* node dist/index.js",
+    "watch": "tsc --watch",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "playwright:install": "npx playwright install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@langchain/community": "^0.0.29",
+    "@langchain/openai": "^0.0.14",
+    "axios": "^1.8.3",
+    "commander": "^11.1.0",
+    "dotenv": "^16.4.7",
+    "langchain": "^0.1.17",
+    "langchain-core": "^0.0.4",
+    "openai": "^4.87.3",
+    "playwright": "^1.51.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10"
+  }
+}

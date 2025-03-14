@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSautomation Docker Setup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .container {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .service {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-left: 4px solid #3498db;
+            border-radius: 3px;
+        }
+        .service h3 {
+            margin-top: 0;
+            color: #3498db;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .status.online {
+            background-color: #2ecc71;
+            color: white;
+        }
+        .status.offline {
+            background-color: #e74c3c;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>TSautomation Docker Environment</h1>
+    
+    <div class="container">
+        <p>This page confirms that the Nginx reverse proxy is working correctly. The following services are configured in this environment:</p>
+        
+        <div class="service">
+            <h3>Automation Service</h3>
+            <p>The main TSautomation service running with Playwright.</p>
+            <p>Access URL: <a href="/automation/">https://localhost/automation/</a></p>
+            <div class="status online">Running</div>
+        </div>
+        
+        <div class="service">
+            <h3>Skyvern API</h3>
+            <p>AI-powered visual automation service.</p>
+            <p>Access URL: <a href="/api/v1/">https://localhost/api/v1/</a></p>
+            <div class="status online">Running</div>
+        </div>
+        
+        <div class="service">
+            <h3>Skyvern UI</h3>
+            <p>User interface for Skyvern.</p>
+            <p>Access URL: <a href="/skyvern/">https://localhost/skyvern/</a></p>
+            <div class="status online">Running</div>
+        </div>
+    </div>
+    
+    <p>For more information, see the <a href="https://github.com/yourusername/TSautomation">GitHub repository</a>.</p>
+    
+    <script>
+        // Simple script to check service status
+        async function checkServiceStatus() {
+            const services = document.querySelectorAll('.service');
+            
+            for (const service of services) {
+                const statusElement = service.querySelector('.status');
+                const link = service.querySelector('a');
+                
+                try {
+                    // This is just a visual demo - in a real implementation,
+                    // you would make actual fetch requests to check status
+                    statusElement.className = 'status online';
+                    statusElement.textContent = 'Running';
+                } catch (error) {
+                    statusElement.className = 'status offline';
+                    statusElement.textContent = 'Offline';
+                }
+            }
+        }
+        
+        // Check status when page loads
+        window.addEventListener('load', checkServiceStatus);
+    </script>
+</body>
+</html>

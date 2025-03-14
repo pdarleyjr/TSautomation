@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+  automation:
+    build: .
+    volumes:
+      - ./logs:/app/logs
+      - ./.env:/app/.env
+    environment:
+      - HEADLESS=true
+      - DEFAULT_TIMEOUT=60000
+      - PARALLEL_ENABLED=false
+      - MAX_CONCURRENT=2
+      - SAVE_SCREENSHOTS=true
+      - SKYVERN_API_URL=http://skyvern:8000
+    depends_on:
+      - skyvern
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    restart: unless-stopped
+    networks:
+      - automation-network
+
+  skyvern:
+    build: ./skyvern
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./skyvern/app.py:/app/app.py
+      - ./skyvern-data:/data
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SKYVERN_API_KEY=${SKYVERN_API_KEY}
+      - SKYVERN_BEARER_TOKEN=${SKYVERN_BEARER_TOKEN}
+      - SKYVERN_DATA_DIR=/data
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - automation-network
+
+  postgres:
+    image: postgres:14
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=skyvern
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - automation-network
+
+  skyvernui:
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_SKYVERN_API_URL=http://skyvern:8000/api/v2
+      - VITE_BASE_PATH=/skyvern/
+      - VITE_SKYVERN_API_KEY=${SKYVERN_API_KEY}
+    depends_on:
+      - skyvern
+    restart: unless-stopped
+    networks:
+      - automation-network
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/html:/usr/share/nginx/html
+    depends_on:
+      - automation
+      - skyvern
+      - skyvernui
+    restart: unless-stopped
+    networks:
+      - automation-network
+
+volumes:
+  postgres-data:
+
+networks:
+  automation-network:
+    driver: bridge
